@@ -13,13 +13,11 @@ final class UserViewModel: ListDiffable {
     
     let username: String
     let rank: String
-    let points: Int
     var timestamp: String = ""
     
-    init(username: String, points: Int, rank: String, date_created: Date) {
+    init(username: String, rank: String, date_created: Date) {
         self.username = username
         self.rank = rank
-        self.points = points
         self.timestamp = self.timeAgoSinceDate(date_created)
     }
     

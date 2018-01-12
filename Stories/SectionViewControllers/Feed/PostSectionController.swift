@@ -25,7 +25,7 @@ final class PostSectionController: ListBindingSectionController<Post>, ListBindi
     
     func sectionController(_ sectionController: ListBindingSectionController<ListDiffable>, viewModelsFor object: Any) -> [ListDiffable] {
         guard let object = object as? Post else { fatalError() }
-        var results: [ListDiffable] = [UserViewModel(username: object.user.handlename, points: object.user.points, rank: object.user.rank, date_created: object.date_created)]
+        var results: [ListDiffable] = [UserViewModel(username: object.user.handlename, rank: object.user.rank, date_created: object.date_created)]
         if object.image_path != nil {
             results.append(ImageViewModel(url: object.image_path!))
         }

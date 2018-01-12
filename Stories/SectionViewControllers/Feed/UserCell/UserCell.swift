@@ -14,10 +14,9 @@ class UserCell: UICollectionViewCell, ListBindable {
     @IBOutlet weak var usernameLabel: UILabel!
     @IBOutlet weak var timeLabel: UILabel!
     
-    
     func bindViewModel(_ viewModel: Any) {
         guard let viewModel = viewModel as? UserViewModel else { return }
-        usernameLabel.text = viewModel.username + " | " + String(viewModel.points)
+        usernameLabel.text = viewModel.username + " | " + viewModel.rank
         timeLabel.text = viewModel.timestamp
     }
 }
