@@ -38,20 +38,20 @@ final class User: NSObject {
     
     private func rankTitle() -> String {
         if points > 1000 {
-            return "the King of Pirates"
+            return "King of Pirates"
         }
         if points > 300 {
-            return "buccaner"
+            return "Buccaner"
         }
         if points > 150 {
-            return "boatswain"
+            return "Boatswain"
         }
         if points > 50 {
-            return "cannon duty"
+            return "Cannon duty"
         }
         if points > 11 {
-            return "watch standing"
+            return "Watch standing"
         }
-        return "mopper"
+        return "Mopper"
     }
 }
