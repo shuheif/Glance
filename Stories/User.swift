@@ -9,13 +9,13 @@
 import Foundation
 import FirebaseDatabase
 
-final class User {
+final class User: NSObject {
     
     let user_id: String
     let handlename: String
     let posts: Int
     let points: Int
-    let rank: String
+    var rank: String!
     
     init(snapshot: DataSnapshot) {
         self.user_id = snapshot.key
@@ -23,7 +23,8 @@ final class User {
         self.handlename = snapshotValue["handlename"] != nil ? snapshotValue["handlename"] as! String : "error"
         self.points = snapshotValue["points"] != nil ? snapshotValue["points"] as! Int : -99
         self.posts = snapshotValue["posts"] != nil ? snapshotValue["posts"] as! Int : -99
-        self.rank = "---"
+        super.init()
+        self.rank = rankTitle()
     }
     
     init(user_id: String, handlename: String, posts: Int, points: Int) {
@@ -31,6 +32,26 @@ final class User {
         self.handlename = handlename
         self.posts = posts
         self.points = points
-        self.rank = "King"
+        super.init()
+        self.rank = rankTitle()
+    }
+    
+    private func rankTitle() -> String {
+        if points > 1000 {
+            return "the King of Pirates"
+        }
+        if points > 300 {
+            return "buccaner"
+        }
+        if points > 150 {
+            return "boatswain"
+        }
+        if points > 50 {
+            return "cannon duty"
+        }
+        if points > 11 {
+            return "watch standing"
+        }
+        return "mopper"
     }
 }
