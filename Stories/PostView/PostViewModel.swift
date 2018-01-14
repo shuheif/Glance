@@ -11,9 +11,25 @@ import FirebaseDatabase
 import FirebaseAuth
 import FirebaseStorage
 
+protocol PostViewModelDelegate {
+    func userInfoDidUpdate(user: User)
+}
 class PostViewModel {
     
+    var delegate: PostViewModelDelegate?
+    private var user: User?
+    
     init() {    }
+    
+    func loadUserInfo() {
+        let uid = Auth.auth().currentUser!.uid
+        let userRef = Database.database().reference().child(TableNameStruct.dataTable).child(TableNameStruct.beloit_id).child(TableNameStruct.usersTable).child(uid)
+        userRef.observe(.value, with: { snapshot in
+            let user = User(snapshot: snapshot)
+            self.user = user
+            self.delegate?.userInfoDidUpdate(user: user)
+        })
+    }
     
     /*
      Saves a post in the database.

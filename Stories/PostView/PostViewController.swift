@@ -15,12 +15,14 @@ class PostViewController: UIViewController {
     var bottomConstraint: NSLayoutConstraint?
     var image: UIImage?
     var imageURL: String?
-    
+    var user: User?
+
+    @IBOutlet weak var profileImage: UIImageView!
+    @IBOutlet weak var usernameLabel: UILabel!
     @IBOutlet weak var textView: UITextView!
     @IBOutlet weak var toolView: UIView!
     @IBOutlet weak var imageView: UIImageView!
     
-    @IBOutlet weak var imageViewWidthConstraint: NSLayoutConstraint!
     @IBAction func postButtonPushed(_ sender: UIButton) {
         if !textView.text.isEmpty {
             model.post(caption: textView.text!, imageURL: imageURL)
@@ -65,15 +67,14 @@ class PostViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         model = PostViewModel()
+        model.loadUserInfo()
+        model.delegate = self
         textView.placeholder = "What's happneing?"
-        
-        
         // ToolView
         bottomConstraint = NSLayoutConstraint(item: toolView, attribute: .bottom, relatedBy: .equal, toItem: view, attribute: .bottom, multiplier: 1, constant: 0)
         view.addConstraint(bottomConstraint!)
         NotificationCenter.default.addObserver(self, selector: #selector(handleKeyboardNotification), name: .UIKeyboardWillShow, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(handleKeyboardNotification), name: .UIKeyboardWillHide, object: nil)
-        
         toolView.bringSubview(toFront: toolView)
     }
 
@@ -93,12 +94,9 @@ class PostViewController: UIViewController {
 extension PostViewController: UIImagePickerControllerDelegate, UINavigationControllerDelegate {
     
     func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [String : Any]) {
-        print("imagePickerContoller")
         let pickedImage = info[UIImagePickerControllerOriginalImage] as! UIImage
-        //let pickedURL = info[UIImagePickerControllerReferenceURL] as! NSURL
         var documentDirectory = NSSearchPathForDirectoriesInDomains(.documentDirectory, .userDomainMask, true).first!
         documentDirectory.append(UUID().uuidString)
-        
         let data = UIImagePNGRepresentation(pickedImage)
         do {
             try data?.write(to: URL(fileURLWithPath: documentDirectory))
@@ -108,15 +106,16 @@ extension PostViewController: UIImagePickerControllerDelegate, UINavigationContr
         }
         image = pickedImage
         imageURL = documentDirectory
-        showImage()
+        imageView.image = image
         picker.dismiss(animated: true, completion: nil)
     }
+}
+
+
+extension PostViewController: PostViewModelDelegate {
     
-    func showImage() {
-        print("showImage")
-        if image != nil {
-            imageView.image = image
-            imageViewWidthConstraint.constant = 100
-        }
+    func userInfoDidUpdate(user: User) {
+        self.user = user
+        usernameLabel.text = user.handlename
     }
 }
