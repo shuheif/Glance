@@ -25,7 +25,14 @@ class ProfileViewController: UITableViewController {
         adapter.performUpdates(animated: true, completion: nil)
     }
     @IBAction func settingButtonPushed(_ sender: UIBarButtonItem) {
-        try! Auth.auth().signOut()
+        let alert = UIAlertController(title: "Logout", message: nil, preferredStyle: .alert)
+        let cancel = UIAlertAction(title: "Cancel", style: .cancel, handler: nil)
+        let logout = UIAlertAction(title: "Logout", style: .default, handler: { (action: UIAlertAction!) in
+            try! Auth.auth().signOut()
+        })
+        alert.addAction(cancel)
+        alert.addAction(logout)
+        present(alert, animated: true, completion: nil)
     }
     
     override func viewDidLoad() {
@@ -132,7 +139,6 @@ extension ProfileViewController: ProfilePostsLoaderDelegate {
         }
     }
     
-    
     func userPostsDidUpdate() {
         if selectedSegmentIndex == 0 {
             adapter.performUpdates(animated: true, completion: nil)
@@ -141,7 +147,6 @@ extension ProfileViewController: ProfilePostsLoaderDelegate {
     
     func userInfoDidUpdate(user: User) {
         self.user = user
-        let indexPath = IndexPath(row: 0, section: 0)
         tableView.reloadData()
     }
 }
